@@ -1,4 +1,13 @@
 
+/*!
+ * AutoStyle v1.0.1
+ *
+ * Copyright 2013, Uncorked Studios
+ * Licensed under the MIT license.
+ *
+ */
+
+
 var autoStyle = function () {
    
 
@@ -67,7 +76,7 @@ var autoStyle = function () {
    }
 
    function processClusters(clusters){
-      
+
    }
    function hslToRgb(h, s, l){
        var r, g, b;
@@ -99,11 +108,6 @@ var autoStyle = function () {
     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
     * Assumes r, g, and b are contained in the set [0, 255] and
     * returns h, s, and v in the set [0, 1].
-    *
-    * @param   Number  r       The red color value
-    * @param   Number  g       The green color value
-    * @param   Number  b       The blue color value
-    * @return  Array           The HSV representation
     */
    function rgbToHsv(r, g, b){
        r = r/255, g = g/255, b = b/255;
@@ -132,11 +136,6 @@ var autoStyle = function () {
     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
     * Assumes h, s, and v are contained in the set [0, 1] and
     * returns r, g, and b in the set [0, 255].
-    *
-    * @param   Number  h       The hue
-    * @param   Number  s       The saturation
-    * @param   Number  v       The value
-    * @return  Array           The RGB representation
     */
    function hsvToRgb(h, s, v){
        var r, g, b;
