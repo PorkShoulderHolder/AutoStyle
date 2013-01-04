@@ -36,6 +36,7 @@ var autoStyle = function () {
    function processClusters(clusterInfo,highlight1Option,highlight2Option,backgroundOption){
       var avgColor = [clusterInfo.redAvg,clusterInfo.greenAvg,clusterInfo.blueAvg];
       var clusters = clusterInfo.clusters;
+      
       var maxCluster = 0;
       var biggestCluster = null;
       var minCluster = Number.MAX_VALUE;
@@ -46,7 +47,7 @@ var autoStyle = function () {
       var smallestDistFromAvg = null;
       var maxVariance = 0;
       var biggestVariance = null;
-      var minVariance = 0;
+      var minVariance = Number.MAX_VALUE;
       var smallestVariance = null;
       for (var i = clusters.clusterSizes.length - 1; i >= 0; i--) {
          var centroid = clusters.centroids[i];
@@ -82,29 +83,31 @@ var autoStyle = function () {
       var highlight2color = [255,255,255];
       var backgroundColor = [255,255,255];
       switch(highlight1Option){
-         case 0: highlight1color = biggestCluster;
-         case 1: highlight1color = smallestCluster;
-         case 2: highlight1color = biggestDistFromAvg;
-         case 3: highlight1color = smallestDistFromAvg;
-         case 4: highlight1color = biggestVariance;
-         case 5: highlight1color = smallestVariance; 
+         case 0: highlight1color = biggestCluster; break;
+         case 1: highlight1color = smallestCluster;break;
+         case 2: highlight1color = biggestDistFromAvg;break;
+         case 3: highlight1color = smallestDistFromAvg;break;
+         case 4: highlight1color = biggestVariance;break;
+         case 5: highlight1color = smallestVariance; break;
       }
       switch(highlight2Option){
-         case 0: highlight2color = biggestCluster;
-         case 1: highlight2color = smallestCluster;
-         case 2: highlight2color = biggestDistFromAvg;
-         case 3: highlight2color = smallestDistFromAvg;
-         case 4: highlight2color = biggestVariance;
-         case 5: highlight2color = smallestVariance; 
+         case 0: highlight2color = biggestCluster;break;
+         case 1: highlight2color = smallestCluster;break;
+         case 2: highlight2color = biggestDistFromAvg;break;
+         case 3: highlight2color = smallestDistFromAvg;break;
+         case 4: highlight2color = biggestVariance;break;
+         case 5: highlight2color = smallestVariance; break;
       }
       switch(backgroundOption){
-         case 0: backgroundColor = biggestCluster;
-         case 1: backgroundColor = smallestCluster;
-         case 2: backgroundColor = biggestDistFromAvg;
-         case 3: backgroundColor = smallestDistFromAvg;
-         case 4: backgroundColor = biggestVariance;
-         case 5: backgroundColor = smallestVariance; 
+         case 0: backgroundColor = biggestCluster;break;
+         case 1: backgroundColor = smallestCluster;break;
+         case 2: backgroundColor = biggestDistFromAvg;break;
+         case 3: backgroundColor = smallestDistFromAvg;break;
+         case 4: backgroundColor = biggestVariance;break;
+         case 5: backgroundColor = smallestVariance; break;
       }
+      console.log({'highlight1color':highlight1color,'highlight2color':highlight2color,'backgColor':backgroundColor});
+      return{'highlight1color':highlight1color,'highlight2color':highlight2color,'backgColor':backgroundColor};
         
    }
 
@@ -154,7 +157,8 @@ var autoStyle = function () {
    }
       return{
       'getVectors': getVectors,
-      'getClusters': getClusters
+      'getClusters': getClusters,
+      'processClusters': processClusters
    }
 }();
    function hslToRgb(h, s, l){

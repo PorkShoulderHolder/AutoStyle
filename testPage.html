@@ -120,11 +120,18 @@ var goButton = document.getElementById('go');
 var timer = document.getElementById('timer');
 goButton.onclick = function(){
 	var start = new Date().getTime();
-	var dropbox = document.getElementById('test_image');
 	var clusterCount = document.getElementById('clusterCount').value; 
 	var photoInfo = autoStyle.getClusters(clusterCount,dropbox);
+	var colors = autoStyle.processClusters(photoInfo,2,1,0);
+	
+	var highlight1 = colors.highlight1color;
+	var highlight2 = colors.highlight2color;
+	var background = colors.backgColor;
+	console.log(colors);
 	var finish = new Date().getTime();
-	timer.innerHTML = (finish - start)/1000;
+	document.getElementById('test').style.background = "rgb("+Math.floor(background[0])+","+Math.floor(background[1])+","+Math.floor(background[2])+")";
+	document.getElementById('test').style.color = "rgb("+Math.floor(highlight1[0])+","+Math.floor(highlight1[1])+","+Math.floor(highlight1[2])+")";
+	timer.innerHTML = ((finish - start)/1000);
 	console.log(photoInfo);
 
 }
