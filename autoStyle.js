@@ -33,6 +33,84 @@ var autoStyle = function () {
       console.log("loaded");
    }
 
+   function processClusters(clusterInfo,highlight1Option,highlight2Option,backgroundOption){
+      var avgColor = [clusterInfo.redAvg,clusterInfo.greenAvg,clusterInfo.blueAvg];
+      var clusters = clusterInfo.clusters;
+      var maxCluster = 0;
+      var biggestCluster = null;
+      var minCluster = Number.MAX_VALUE;
+      var smallestCluster = null;
+      var maxDistFromAvg = 0;
+      var biggestDistFromAvg = null;
+      var minDistFromAvg = Number.MAX_VALUE;
+      var smallestDistFromAvg = null;
+      var maxVariance = 0;
+      var biggestVariance = null;
+      var minVariance = 0;
+      var smallestVariance = null;
+      for (var i = clusters.clusterSizes.length - 1; i >= 0; i--) {
+         var centroid = clusters.centroids[i];
+         var distFromAvg = euclidianDistance(centroid,avgColor);
+         var variance = clusters.variance;
+
+         if(clusters.clusterSizes[i]>maxCluster){
+            maxCluster = clusters.clusterSizes[i];
+            biggestCluster = clusters.centroids[i];
+         }
+         if(clusters.clusterSizes[i]<minCluster){
+            minCluster = clusters.clusterSizes[i];
+            smallestCluster = clusters.centroids[i];
+         }
+         if(distFromAvg>maxDistFromAvg){
+            maxDistFromAvg = distFromAvg;
+            biggestDistFromAvg = clusters.centroids[i];
+         }
+         if(distFromAvg<minDistFromAvg){
+            minDistFromAvg = distFromAvg;
+            smallestDistFromAvg = clusters.centroids[i];
+         }
+         if(variance>maxVariance){
+            maxVariance = variance;
+            biggestVariance = clusters.centroids[i];
+         }
+         if(variance<minVariance){
+            minVariance = variance;
+            smallestVariance = clusters.centroids[i];
+         }
+      }
+      var highlight1color = [255,255,255];
+      var highlight2color = [255,255,255];
+      var backgroundColor = [255,255,255];
+      switch(highlight1Option){
+         case 0: highlight1color = biggestCluster;
+         case 1: highlight1color = smallestCluster;
+         case 2: highlight1color = biggestDistFromAvg;
+         case 3: highlight1color = smallestDistFromAvg;
+         case 4: highlight1color = biggestVariance;
+         case 5: highlight1color = smallestVariance; 
+      }
+      switch(highlight2Option){
+         case 0: highlight2color = biggestCluster;
+         case 1: highlight2color = smallestCluster;
+         case 2: highlight2color = biggestDistFromAvg;
+         case 3: highlight2color = smallestDistFromAvg;
+         case 4: highlight2color = biggestVariance;
+         case 5: highlight2color = smallestVariance; 
+      }
+      switch(backgroundOption){
+         case 0: backgroundColor = biggestCluster;
+         case 1: backgroundColor = smallestCluster;
+         case 2: backgroundColor = biggestDistFromAvg;
+         case 3: backgroundColor = smallestDistFromAvg;
+         case 4: backgroundColor = biggestVariance;
+         case 5: backgroundColor = smallestVariance; 
+      }
+        
+   }
+
+   function colorOffset(highlight1color,highlight2color,backgroundColor){
+
+   }
    
 
    function getVectors(img){
@@ -46,7 +124,7 @@ var autoStyle = function () {
       var ravg = 0;
       var gavg = 0;
       var bavg = 0;
-      res = Math.floor(Math.sqrt((pixels.width*pixels.height)/11000));
+      res = Math.floor(Math.sqrt((pixels.width*pixels.height)/4000));
       console.log(res);
       for (var x = 0; x < pixels.width; x+=res) {
           for (var y = 0; y < pixels.height; y+=res) {
