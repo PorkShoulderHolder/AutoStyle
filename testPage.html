@@ -1,0 +1,195 @@
+
+<!DOCTYPE html> 
+<html lang="en" style="width: 100%; height: 100%"> 
+<head> 
+<meta charset="utf-8" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" /> 
+<style type="text/css">
+#test_image{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+div{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	text-decoration: none;
+	font-family: sans-serif;
+}
+#test_text{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width:30%;
+}
+.radiobuttons{
+	font-size: 80%; 
+}
+#test{
+	width:100%;
+	height:600px;
+
+}
+
+</style> 
+</head> 
+
+
+<body class="center" style="width: 100%; height: 100%">  
+
+<div style="width: 100%; height: 100%; position: absolute; z-index: 0" id="divMain">
+	<div id="test">
+		<img id="test_image" src="bird2.jpg" align="middle"></img>
+		<div id='test_text'>And the most cunning of them all was this small man. His toes were taut in the wet sand as he scanned the horizon, trying to anticipate where the great beast would breach the waves. </div> 
+	</div>
+	<div>
+		<button id ='go'>Go</button>
+		<br><br>
+	</div>
+	<div style="width: 100%; height: 100%; position: absolute; z-index: 0" id="divMain">
+		Speed: <label id ='timer'>The flexors are gurgling</label> seconds
+		<br><br>
+	<div>
+		Total clusters to choose from:
+		<input type="text" name="numberOfClusters" value="7" id="clusterCount">
+		<br><br>
+	</div>
+	<div>
+		Resolution:
+		<input type="text" name="resolution" value="7" id="clusterCount">
+	</div>    
+	<div class="radiobuttons">
+		<h1>highlight one:</h1>
+		<input type="radio" name="highlight1" style="z-index: 60;"> Largest cluster</input>
+		<input type="radio" name="highlight1" style="z-index: 60;"> smallest cluster</input>
+		<input type="radio" name="highlight1" style="z-index: 60;"> least varied cluster</input>
+		<input type="radio" name="highlight1" style="z-index: 60;"> most varied cluster</input>
+		<input type="radio" name="highlight1" style="z-index: 60;"> farthest from average color</input>
+		<input type="radio" name="highlight1" style="z-index: 60;"> closest to average color</input>
+		<h3>Color offset</h3>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;">add</input>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;">multiply</br>
+		Hue: <input type="text" name="h1" value="0">
+		Saturation: <input type="text" name="s1" value="0">
+		Value: <input type="text" name="v1" value="0">
+		
+	</div>
+	<div class="radiobuttons">
+		<h1>highlight two:</h1>
+		<input type="radio" name="highlight2" style="z-index: 60;"> Largest cluster</input>
+		<input type="radio" name="highlight2" style="z-index: 60;"> smallest cluster</input>
+		<input type="radio" name="highlight2" style="z-index: 60;"> least varied cluster</input>
+		<input type="radio" name="highlight2" style="z-index: 60;"> most varied cluster</input>
+		<input type="radio" name="highlight2" style="z-index: 60;"> farthest from average color</input>
+		<input type="radio" name="highlight2" style="z-index: 60;"> closest to average color</input>
+		<h3>Color offset</h3>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="middle">add</input>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="middle">multiply</br>
+		Hue: <input type="text" name="h2" value="0">
+		Saturation: <input type="text" name="s2" value="0">
+		Value: <input type="text" name="v2" value="0">         
+		
+		
+	</div>
+	<div class="radiobuttons">
+		<h1>background:</h1>
+		<input type="radio" name="background" style="z-index: 60;"> Largest cluster</input>
+		<input type="radio" name="background" style="z-index: 60;"> smallest cluster</input>
+		<input type="radio" name="background" style="z-index: 60;"> least varied cluster</input>
+		<input type="radio" name="background" style="z-index: 60;"> most varied cluster</input>
+		<input type="radio" name="background" style="z-index: 60;"> farthest from average color</input>
+		<input type="radio" name="background" style="z-index: 60;"> closest to average color</input>
+		<h3>Color offset</h3>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="center">add</input>
+		<input type="radio" name="highlightoffsettype" style="z-index: 60;" align="center">multiply</br>
+		Hue: <input type="text" name="h3" value="0">
+		Saturation: <input type="text" name="s3" value="0">
+		Value: <input type="text" name="v3" value="0">         
+		
+	</div>
+	<canvas id='graph'></canvas>
+	
+</div>
+
+
+<script type="text/javascript" src='figue.js'></script>
+<script type="text/javascript" src='autoStyle.js'></script>
+<script type="text/javascript">
+var goButton = document.getElementById('go');
+var timer = document.getElementById('timer');
+goButton.onclick = function(){
+	var start = new Date().getTime();
+	var dropbox = document.getElementById('test_image');
+	var clusterCount = document.getElementById('clusterCount').value; 
+	var photoInfo = autoStyle.getClusters(clusterCount,dropbox);
+	var finish = new Date().getTime();
+	timer.innerHTML = (finish - start)/1000;
+	console.log(photoInfo);
+
+}
+var start = new Date().getTime(); 
+var dropbox = document.getElementById('test_image');
+var clusterCount = document.getElementById('clusterCount').value; 
+var photoInfo = autoStyle.getClusters(clusterCount,dropbox);
+var finish = new Date().getTime();
+timer.innerHTML = ((finish - start)/1000);
+console.log(photoInfo);
+
+// Setup drag and drop handlers. 
+dropbox.addEventListener('dragenter', stopDefault, false); 
+dropbox.addEventListener('dragover', stopDefault, false); 
+dropbox.addEventListener('dragleave', stopDefault, false); 
+dropbox.addEventListener('drop', onDrop, false); 
+
+function stopDefault(e)  
+{ 
+  e.stopPropagation(); 
+  e.preventDefault(); 
+} 
+
+
+function onDrop(e)  
+{
+	console.log("dropped"); 
+	e.stopPropagation(); 
+	e.preventDefault(); 
+
+	var readFileSize = 0; 
+	var files = e.dataTransfer.files; 
+	console.log(files);
+	file = files[0]; 
+	readFileSize += file.fileSize; 
+
+
+	// Only process image files. 
+	var imageType = /image.*/; 
+
+	if (!file.type.match(imageType))  
+	{ 
+		return; 
+		} 
+
+
+	var reader = new FileReader(); 
+
+
+	reader.onerror = function(e)  
+	{ 
+		alert('Error code: ' + e.target.error); 
+	}; 
+
+
+	// Create a closure to capture the file information. 
+	reader.onload = (function(aFile)  
+	{ 
+	return function(evt)  
+	{ 
+		dropbox.src = evt.target.result; 
+	} 
+	})(file); 
+
+	// Read in the image file as a data url. 
+	reader.readAsDataURL(file); 
+} 
+</script>
