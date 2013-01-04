@@ -10,6 +10,7 @@
 
 var autoStyle = function () {
    
+   loadScript('figue.js',callback);
 
    function loadScript(url, callback)
    {
@@ -30,19 +31,17 @@ var autoStyle = function () {
 
    function callback(){
       console.log("loaded");
-      
-      console.log(clusters);
    }
 
-   loadScript('figue.js',callback);
+   
 
    function getVectors(img){
       var canvas = document.createElement('canvas');
       canvas.width = img.width
       canvas.height = img.height
-      var ctx = c.getContext('2d');
-      ctx.drawImage(img,0,0,c.width,c.height);
-      var pixels = ctx.getImageData(0,0,c.width,c.height);
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      var pixels = ctx.getImageData(0,0,canvas.width,canvas.height);
       var vectors = new Array(); 
       var ravg = 0;
       var gavg = 0;
@@ -70,14 +69,16 @@ var autoStyle = function () {
       }
 
    function getClusters(k,img){
-      var vectors = getVectors(img).vectors;
+      var info = getVectors(img);
+      var vectors = info.vectors;
       var clusters = figue.kmeans(k,vectors);
-      return {'clusters':clusters,'vectors':vectors.vectors,'redAvg':vectors.redAvg,'greenAvg':vectors.greenAvg,'blueAvg':vectors.blueAvg};
+      return {'clusters':clusters,'vectors':info.vectors,'redAvg':info.redAvg,'greenAvg':info.greenAvg,'blueAvg':info.blueAvg};
    }
-
-   function processClusters(clusters){
-
+      return{
+      'getVectors': getVectors,
+      'getClusters': getClusters
    }
+}();
    function hslToRgb(h, s, l){
        var r, g, b;
 
@@ -184,5 +185,3 @@ var autoStyle = function () {
       
       return new Array(R,G,B);
    }
-   return {}
-}
