@@ -49,11 +49,22 @@ var autoStyle = function () {
       var biggestVariance = null;
       var minVariance = Number.MAX_VALUE;
       var smallestVariance = null;
+      console.log(clusters);
+      console.log('ghgh');
+      clusterArray = new Array();
+      for (var i = clusters.clusterSizes.length - 1; i >= 0; i--) {
+        clusterArray.push({'clusterSize':clusters.clusterSizes[i],'centroid':clusters.centroids[i],'distFromAvg':euclidianDistance(clusters.centroids[i],avgColor)});
+      }
+      var sortedBySize = clusterArray.sort(function(a,b){
+       return (a.clusterSize - b.clusterSize);
+      });
+      var sortedByVariance = clusters;
+      var sor
       for (var i = clusters.clusterSizes.length - 1; i >= 0; i--) {
          var centroid = clusters.centroids[i];
          var distFromAvg = euclidianDistance(centroid,avgColor);
-         var variance = clusters.variance;
-
+         //var variance = clusters.variance[i];
+         variance = 0;
          if(clusters.clusterSizes[i]>maxCluster){
             maxCluster = clusters.clusterSizes[i];
             biggestCluster = clusters.centroids[i];
@@ -116,7 +127,7 @@ var autoStyle = function () {
    }
    
 
-   function getVectors(img){
+   function getVectors(img,res){
       var canvas = document.createElement('canvas');
       canvas.width = img.width
       canvas.height = img.height
@@ -127,8 +138,12 @@ var autoStyle = function () {
       var ravg = 0;
       var gavg = 0;
       var bavg = 0;
-      res = Math.floor(Math.sqrt((pixels.width*pixels.height)/4000));
-      console.log(res);
+      if(res == 'auto'){
+        res = Math.floor(Math.sqrt((pixels.width*pixels.height)/7000));
+
+      }
+      res = Number(res); 
+      console.log(res)
       for (var x = 0; x < pixels.width; x+=res) {
           for (var y = 0; y < pixels.height; y+=res) {
                var i = (y * pixels.width + x)*4;
@@ -149,8 +164,8 @@ var autoStyle = function () {
          return {'vectors':vectors,'redAvg':ravg,'greenAvg':gavg,'blueAvg':bavg};
       }
 
-   function getClusters(k,img){
-      var info = getVectors(img);
+   function getClusters(k,img,res){
+      var info = getVectors(img,res);
       var vectors = info.vectors;
       var clusters = figue.kmeans(k,vectors);
       return {'clusters':clusters,'vectors':info.vectors,'redAvg':info.redAvg,'greenAvg':info.greenAvg,'blueAvg':info.blueAvg};
