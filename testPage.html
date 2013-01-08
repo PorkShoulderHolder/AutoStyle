@@ -38,11 +38,22 @@ div{
 	height:600px;
 
 }
+
+button{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 200px;
+	height: 75px;
+	top: 602px;
+	z-index: 400;
+}
 #graph{
 	position: absolute;
-	top:600px;
-	left: 600px;
-	
+	display: block;
+	top: 700px;
+	left: 700px;
+	z-index: -1;
 }
 
 </style> 
@@ -73,21 +84,37 @@ div{
 	</div>
 	<div>
 		Total clusters to choose from:
-		<input type="text" name="numberOfClusters" value="7" id="clusterCount">
+		<input type="text" name="numberOfClusters" value="24" id="clusterCount">
 		<br><br>
 	</div>
 	<div>
 		Resolution:
 		<input type="text" name="resolution" value="auto" id="resolution">
+		<br><br>
 	</div>
+	<div>
+		Minimum brightness(value) differential between background and text:
+		<input type="text" name="threshold" value="auto" id="resolution">
+	</div>
+	<div>
+		<h2>Reference color</h2>
+		<input type="radio" name="reference" style="z-index: 60;"> Background </input>
+		<input type="radio" name="reference" style="z-index: 60;"> Highlight one </input>
+		<input type="radio" name="reference" style="z-index: 60;"> Highlight two </input>
+	</div>
+	<div>
+		<h2>Relationship to reference color</h2>
+		<input type="radio" name="relationship" style="z-index: 60;"> None </input>
+		<input type="radio" name="relationship" style="z-index: 60;"> Complimentary </input>
+		<input type="radio" name="relationship" style="z-index: 60;"> Tertiary</input>
+	</div>
+	
 	<div class="radiobuttons">
 		<h1>highlight one:</h1>
 		<input type="radio" name="highlight1" style="z-index: 60;"> Largest cluster</input>
 		<input type="radio" name="highlight1" style="z-index: 60;"> smallest cluster</input>
 		<input type="radio" name="highlight1" style="z-index: 60;"> least varied cluster</input>
 		<input type="radio" name="highlight1" style="z-index: 60;"> most varied cluster</input>
-		<input type="radio" name="highlight1" style="z-index: 60;"> farthest from average color</input>
-		<input type="radio" name="highlight1" style="z-index: 60;"> closest to average color</input>
 		<h3>Color offset</h3>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;">add</input>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;">multiply</br>
@@ -102,8 +129,6 @@ div{
 		<input type="radio" name="highlight2" style="z-index: 60;"> smallest cluster</input>
 		<input type="radio" name="highlight2" style="z-index: 60;"> least varied cluster</input>
 		<input type="radio" name="highlight2" style="z-index: 60;"> most varied cluster</input>
-		<input type="radio" name="highlight2" style="z-index: 60;"> farthest from average color</input>
-		<input type="radio" name="highlight2" style="z-index: 60;"> closest to average color</input>
 		<h3>Color offset</h3>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="middle">add</input>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="middle">multiply</br>
@@ -119,8 +144,6 @@ div{
 		<input type="radio" name="background" style="z-index: 60;"> smallest cluster</input>
 		<input type="radio" name="background" style="z-index: 60;"> least varied cluster</input>
 		<input type="radio" name="background" style="z-index: 60;"> most varied cluster</input>
-		<input type="radio" name="background" style="z-index: 60;"> farthest from average color</input>
-		<input type="radio" name="background" style="z-index: 60;"> closest to average color</input>
 		<h3>Color offset</h3>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;"align="center">add</input>
 		<input type="radio" name="highlightoffsettype" style="z-index: 60;" align="center">multiply</br>
@@ -182,6 +205,9 @@ function analyse(){
 	var highlight1 = colors.highlight1color;
 	var highlight2 = colors.highlight2color;
 	var background = colors.backgColor;
+	console.log(colors);
+	console.log('$$$$');
+	var pickedColors = {'highlight1':highlight1,'highlight2':highlight2}
 	var finish = new Date().getTime();
 	var drawCanvas = document.getElementById('graph');
 	var ctxdraw = drawCanvas.getContext('2d');
@@ -191,7 +217,7 @@ function analyse(){
 	document.getElementById('accent2').style.color = "rgb("+Math.floor(highlight1[0])+","+Math.floor(highlight1[1])+","+Math.floor(highlight1[2])+")";
 	timer.innerHTML = ((finish - start)/1000);
 	drawGraph(ctxdraw,clusters);
-	console.log(photoInfo);
+	//console.log(photoInfo);
 }
 
 function onDrop(e)  
@@ -231,7 +257,6 @@ function onDrop(e)
 	return function(evt)  
 	{ 
 		dropbox.src = evt.target.result; 
-		analyse();
 
 	} 
 	})(file); 

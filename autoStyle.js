@@ -33,7 +33,14 @@ var autoStyle = function () {
       console.log("loaded");
    }
 
-   function processClusters(clusterInfo,highlight1Option,highlight2Option,backgroundOption){
+   function sortByDistanceFromPoint(array,point){
+      array.sort(function(a,b){
+          return euclidianDistance(a.centroid,point) - euclidianDistance(b.centroid,point);  
+      });
+      return array;
+   }
+
+   function processClusters(clusterInfo,highlight1Option,highlight2Option,backgroundOption,threshold){
       var avgColor = [clusterInfo.redAvg,clusterInfo.greenAvg,clusterInfo.blueAvg];
       var clusters = clusterInfo.clusters;
       
@@ -56,74 +63,86 @@ var autoStyle = function () {
         clusterArray.push({'clusterSize':clusters.clusterSizes[i],'centroid':clusters.centroids[i],'distFromAvg':euclidianDistance(clusters.centroids[i],avgColor)});
       }
       var sortedBySize = clusterArray.sort(function(a,b){
-       return (a.clusterSize - b.clusterSize);
-      });
-      var sortedByVariance = clusters;
-      var sor
-      for (var i = clusters.clusterSizes.length - 1; i >= 0; i--) {
-         var centroid = clusters.centroids[i];
-         var distFromAvg = euclidianDistance(centroid,avgColor);
-         //var variance = clusters.variance[i];
-         variance = 0;
-         if(clusters.clusterSizes[i]>maxCluster){
-            maxCluster = clusters.clusterSizes[i];
-            biggestCluster = clusters.centroids[i];
-         }
-         if(clusters.clusterSizes[i]<minCluster){
-            minCluster = clusters.clusterSizes[i];
-            smallestCluster = clusters.centroids[i];
-         }
-         if(distFromAvg>maxDistFromAvg){
-            maxDistFromAvg = distFromAvg;
-            biggestDistFromAvg = clusters.centroids[i];
-         }
-         if(distFromAvg<minDistFromAvg){
-            minDistFromAvg = distFromAvg;
-            smallestDistFromAvg = clusters.centroids[i];
-         }
-         if(variance>maxVariance){
-            maxVariance = variance;
-            biggestVariance = clusters.centroids[i];
-         }
-         if(variance<minVariance){
-            minVariance = variance;
-            smallestVariance = clusters.centroids[i];
-         }
-      }
+          return a.clusterSize - b.clusterSize ;
+      })
+      for (var i in sortedBySize) {
+        console.log('s')
+        console.log(sortedBySize[i]);
+      };
       var highlight1color = [255,255,255];
       var highlight2color = [255,255,255];
       var backgroundColor = [255,255,255];
+      
+      backgroundColor = sortedBySize[sortedBySize.length-1].centroid;
+      console.log(backgroundColor);
+      console.log('asd');
+      var sortedByDistFromAvg = sortByDistanceFromPoint(clusterArray,avgColor);
+      var sortedByVariance = clusters;
+
+      
+      /*
       switch(highlight1Option){
-         case 0: highlight1color = biggestCluster; break;
-         case 1: highlight1color = smallestCluster;break;
-         case 2: highlight1color = biggestDistFromAvg;break;
-         case 3: highlight1color = smallestDistFromAvg;break;
-         case 4: highlight1color = biggestVariance;break;
-         case 5: highlight1color = smallestVariance; break;
+         case 0: highlight1color = sortedBySize[0].centroid; break;
+         case 1: highlight1color = sortedBySize[sortedBySize.length-1].centroid;break;
+         case 2: highlight1color = sortedByDistFromAvg[0].centroid;break;
+         case 3: highlight1color = sortedByDistFromAvg[sortedByDistFromAvg.length-1].centroid;break;
       }
       switch(highlight2Option){
-         case 0: highlight2color = biggestCluster;break;
-         case 1: highlight2color = smallestCluster;break;
-         case 2: highlight2color = biggestDistFromAvg;break;
-         case 3: highlight2color = smallestDistFromAvg;break;
-         case 4: highlight2color = biggestVariance;break;
-         case 5: highlight2color = smallestVariance; break;
+         case 0: highlight2color = sortedBySize[0].centroid; break;
+         case 1: highlight2color = sortedBySize[sortedBySize.length-1].centroid;break;
+         case 2: highlight2color = sortedByDistFromAvg[0].centroid;break;
+         case 3: highlight2color = sortedByDistFromAvg[sortedByDistFromAvg.length-1].centroid;break;
       }
       switch(backgroundOption){
-         case 0: backgroundColor = biggestCluster;break;
-         case 1: backgroundColor = smallestCluster;break;
-         case 2: backgroundColor = biggestDistFromAvg;break;
-         case 3: backgroundColor = smallestDistFromAvg;break;
-         case 4: backgroundColor = biggestVariance;break;
-         case 5: backgroundColor = smallestVariance; break;
+         case 0: backgroundColor = sortedBySize[sortedBySize.length-1].centroid; break;
+         case 1: backgroundColor = sortedBySize[0].centroid;break;
+         case 2: backgroundColor = sortedByDistFromAvg[0].centroid;break;
+         case 3: backgroundColor = sortedByDistFromAvg[sortedByDistFromAvg.length-1].centroid;break;
       }
-      console.log({'highlight1color':highlight1color,'highlight2color':highlight2color,'backgColor':backgroundColor});
+      */
+
+      var compliment = calculateCompliment(backgroundColor);
+
+      console.log(compliment);
+
+      var processedCompliment = processCompliment(backgroundColor,compliment,200);
+
+      var sortedByDistanceToCompliment = sortByDistanceFromPoint(clusterArray,processedCompliment);
+      
+      
+
+      highlight1color = sortedByDistanceToCompliment[0].centroid;
+
+      highlight2color = sortedByDistanceToCompliment[1].centroid;
+    
       return{'highlight1color':highlight1color,'highlight2color':highlight2color,'backgColor':backgroundColor};
         
    }
 
    function colorOffset(highlight1color,highlight2color,backgroundColor){
 
+   }
+
+   function processCompliment(color,compliment,threshold){
+      color = rgbToHsv(color[0],color[1],color[2]);
+      compliment = rgbToHsv(compliment[0],compliment[1],compliment[2]);
+      var processedCompliment = compliment;
+      console.log(compliment);
+      if (threshold > 1){
+        threshold /= 255.0;
+      }
+      if (Math.abs(color[2]-compliment[2]) < threshold) {
+          if (color[2] > compliment[2]) {
+              processedCompliment[2] -= Math.abs(Math.abs(color[2]-compliment[2]) - threshold);
+              console.log('minus');
+          }
+          else{
+              processedCompliment[2] += Math.abs(Math.abs(color[2]-compliment[2]) - threshold);
+              console.log('plus');
+          }
+      }
+      console.log(processedCompliment);
+      return hsvToRgb(processedCompliment[0],processedCompliment[1],processedCompliment[2]);      
    }
    
 
@@ -139,8 +158,10 @@ var autoStyle = function () {
       var gavg = 0;
       var bavg = 0;
       if(res == 'auto'){
-        res = Math.floor(Math.sqrt((pixels.width*pixels.height)/7000));
-
+        res = Math.floor(Math.sqrt((pixels.width*pixels.height)/2000));
+      }
+      if(res < 1){
+        res = 1;
       }
       res = Number(res); 
       console.log(res)
@@ -176,6 +197,18 @@ var autoStyle = function () {
       'processClusters': processClusters
    }
 }();
+
+   function calculateCompliment(color){
+      //console.log(color);
+      color =  rgbToHsv(color[0],color[1],color[2]);
+      color[0] = color[0] + 0.5;
+      if (color[0] > 1) {
+        color[0] - 1;
+      };
+      return hsvToRgb(color[0],color[1],color[2]);
+   } 
+
+
    function hslToRgb(h, s, l){
        var r, g, b;
 
