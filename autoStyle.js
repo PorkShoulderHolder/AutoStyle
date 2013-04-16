@@ -2,7 +2,7 @@
 /*!
  * AutoStyle v1.0.1
  *
- * Copyright 2013, Uncorked Studios
+ * Copyright 2013, Sam Royston/Uncorked Studios
  * Licensed under the MIT license.
  *
  */
