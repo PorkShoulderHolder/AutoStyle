@@ -1,11 +1,11 @@
-
 autoStyle.js uses the figue.js class written by Jean-Yves Delort to do k-means clustering to the colors in an image. 
 It provides methods for generating a number of colors from an image. Included also is an index.html file that you can use to test parameters 
 and how they work on different images.
 
 make sure to import figue.js before autoStyle.js and autoStyle.js before you use it in your javascript.
 
-
+NOTE: google Chrome currently has issues with reading the photos with this method, due to a 'tainted canvas', try firefox or safari. I will add code to load images locally in order to avoid this.
+ 
 Example usage:
 	
 
