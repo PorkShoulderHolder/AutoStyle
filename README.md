@@ -1,10 +1,11 @@
 autoStyle.js uses the figue.js class written by Jean-Yves Delort to do k-means clustering to the colors in an image. 
-It provides methods for generating a number of colors from an image. Included also is an index.html file that you can use to test parameters 
-and how they work on different images by dragging and dropping them onto the image.
+It provides methods for generating a number of colors from an image. Included is an index.html file that you can use to see the code in action.
+In firefox/safari you can change to different images by dragging and dropping them onto the image ~ in chrome this functionality doesnt work..
 
 make sure to import figue.js before autoStyle.js and autoStyle.js before you use it in your javascript.
 
-NOTE: google Chrome currently has issues with reading the photos with this method, due to a 'tainted canvas', try firefox or safari. I will add code to load images locally in order to avoid this.
+NOTE: Make sure to serve the example rather than looking at it with file://, because some canvas operations have trouble with local files.
+You can run python -m SimpleHTTPServer in the autostyle directory (in terminal) to fix it, and then view the files at localhost:8000 .
  
 Example usage:
 	
@@ -17,11 +18,16 @@ Example usage:
 	//every 4th pixel is read (this speeds things up) i.e. every resolution^2 pixel
 	
 	var resolution = 2;
-	
-	
+
+
+	// specify the image to perform clustering on
+
+	var image = document.getElementById('test_image');
+
+
 	//perform clustering on image
 	
-	var photoInfo = autoStyle.getClusters(clusterCount,dropbox,resolution);
+	var photoInfo = autoStyle.getClusters(clusterCount,image,resolution);
 	
 	
 	//the set of clusters is
@@ -29,7 +35,8 @@ Example usage:
 	var clusters = photoInfo.clusters;
 	
 	
-	//further filter the clusters to pick the best ones for an image. This each color object is an array of 3 values
+	//further filter the clusters to pick the best ones for an image. Each color object is an array of 3 values.
+	//This function is pretty subjective, and should probably be customised per-application.
 	
 	var colors = autoStyle.processClusters(photoInfo,threshold);
 	

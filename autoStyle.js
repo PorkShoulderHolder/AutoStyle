@@ -295,7 +295,7 @@ var autoStyle = function () {
       var I = (0.596*R)-(0.275*G)-(0.321*B);
       var Q = (0.212*R)-(0.523*G)+(0.311*B);
       
-      return new Array(Y,I,Q);
+      return new Array(Y*2 + 255,I*2 +255,Q*2 +255);
 
    }
    function euclidianDistance (vec1 , vec2) {
